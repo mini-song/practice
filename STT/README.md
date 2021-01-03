@@ -1,4 +1,4 @@
-# practice
+# STT
 
 - https://www.aihub.or.kr/ 
 - 한국지능정보사회진흥원 AI HUB 에서 진행하는 아이디어 공모전
