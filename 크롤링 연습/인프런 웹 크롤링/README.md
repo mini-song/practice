@@ -4,7 +4,8 @@
 * 셀레니움 크롤
 * request
 * 동적 크롤링
-* headless
+* headless Chrome&
+** 창을 
 
 
 * Requests vs 셀레니움
