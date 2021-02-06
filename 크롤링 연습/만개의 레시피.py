@@ -119,6 +119,72 @@ import pandas as pd
 
 
 
+# +
+url_1000개=[]
+
+for i in tqdm(range(1,11)):
+    try:
+        url = 'https://www.10000recipe.com/recipe/list.html?cat3=70&order=reco&page='+str(i)
+        req = requests.get(url)
+        html = req.text
+        soup = BeautifulSoup(html,'html.parser')
+        소고기_number_list=soup.find_all("div",attrs={'class':'common_sp_thumb'})
+        for i in 소고기_number_list:
+            url_1000개.append('https://www.10000recipe.com' + i.find('a')['href'])
+        browser.quit()
+        print(len(url_1000개))
+    except Exception:
+        pass
+
+# +
+url = 'https://www.10000recipe.com/recipe/list.html?cat3=70&order=reco&page=1'
+req = requests.get(url)
+html = req.text
+soup = BeautifulSoup(html,'html.parser')
+소고기_number_list=soup.find_all("div",attrs={'class':'common_sp_thumb'})
+
+browser.quit()
+# -
+
+len(url_1000개)
+
+url_1000개[230]
+
+# +
+
+csv_list=[['title','재료','태그']]
+for url_ in tqdm(url_1000개):
+    try:
+        url = url_
+        req = requests.get(url)
+        html = req.text
+        soup = BeautifulSoup(html,'html.parser')
+        #movies = soup.find("div",attrs={'class':'view2_summary st3'})
+        ingredient = soup.find("div",attrs={'class':'ready_ingre3'})
+        browser.quit()
+        재료=[]
+        title=soup.find("h3").text
+        t=ingredient.find_all('a')
+        s=soup.find("div", attrs={'class':"view_tag"})
+        tag=[]
+        for i in s:
+            tag.append(i.text.replace('#',''))
+        for i in t:
+            재료.append(i.text.strip().replace(" ","").replace("\n"," "))
+        하나=[]
+        하나.append(title)
+        하나.append(재료)
+        하나.append(tag)
+        csv_list.append(하나)
+    except Exception:
+        pass
+# +
+import pandas as pd
+
+바꾸자=pd.DataFrame(csv_list)
+바꾸자.to_csv('웹스크래핑_400.csv',encoding='utf-8-sig',header=False)
+
+# -
 
 
 
