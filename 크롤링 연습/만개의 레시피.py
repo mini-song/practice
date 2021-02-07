@@ -152,39 +152,81 @@ url_1000개[230]
 
 # +
 
-csv_list=[['title','재료','태그']]
+csv_list=[['url','title','재료','태그']]
 for url_ in tqdm(url_1000개):
+    
+    url = url_
+    req = requests.get(url)
+    html = req.text
+    soup = BeautifulSoup(html,'html.parser')
+    #movies = soup.find("div",attrs={'class':'view2_summary st3'})
     try:
-        url = url_
-        req = requests.get(url)
-        html = req.text
-        soup = BeautifulSoup(html,'html.parser')
-        #movies = soup.find("div",attrs={'class':'view2_summary st3'})
         ingredient = soup.find("div",attrs={'class':'ready_ingre3'})
-        browser.quit()
-        재료=[]
-        title=soup.find("h3").text
+    except Exception:
+        pass
+    browser.quit()
+    재료=[]
+    title=soup.find("h3").text
+    try:
         t=ingredient.find_all('a')
+    
         s=soup.find("div", attrs={'class':"view_tag"})
         tag=[]
         for i in s:
             tag.append(i.text.replace('#',''))
-        for i in t:
-            재료.append(i.text.strip().replace(" ","").replace("\n"," "))
-        하나=[]
-        하나.append(title)
-        하나.append(재료)
-        하나.append(tag)
-        csv_list.append(하나)
     except Exception:
         pass
+    for i in t:
+        재료.append(i.text.strip().replace(" ","").replace("\n"," "))
+    하나.append(url)
+    하나=[]
+    하나.append(title)
+    하나.append(재료)
+    하나.append(tag)
+    csv_list.append(하나)
 # +
 import pandas as pd
 
 바꾸자=pd.DataFrame(csv_list)
-바꾸자.to_csv('웹스크래핑_400.csv',encoding='utf-8-sig',header=False)
+바꾸자.to_csv('웹스크래핑_400_2.csv',encoding='utf-8-sig',header=False)
 
+
+
+# +
+from konlpy.tag import *
+
+hannanum = Hannanum()
+kkma = Kkma()
+komoran = Komoran()
+#mecab = Mecab()
+okt = Okt()
 # -
 
+hannanum.nouns('차돌박이 참나물 샐러드 , 쉽고 간단하지만 폼나고 맛있다.')
+
+kkma.nouns('차돌박이 참나물 샐러드 , 쉽고 간단하지만 폼나고 맛있다.')
+
+komoran.nouns('차돌박이 참나물 샐러드 , 쉽고 간단하지만 폼나고 맛있다.')
+
+okt.nouns('차돌박이 참나물 샐러드 , 쉽고 간단하지만 폼나고 맛있다.')
+
+from eunjeon import Mecab
+
+tagger=Mecab()
+
+tagger.nouns('차돌박이 참나물 샐러드 , 쉽고 간단하지만 폼나고 맛있다.')
+
+# +
+import requests
+import json
+
+api_key="http://api.adams.ai/datamixiApi/tms?query=프랑스의 시골파이 - 아쉬 빠흐멍띠에 -.&lang=kor&analysis=pos&key=5407184264015720799"
+
+#api_key ="http://svc.saltlux.ai:31781?&key=0857f633-ca21-4b7a-8e7b-873e224ba430&serviceId=01135983394&argument=오늘날씨가 좋네요."
+# -
+
+r2  = requests.get(api_key)
+
+r2.json()
 
 
